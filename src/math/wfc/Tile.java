@@ -1,5 +1,5 @@
-package math.wfc.tiles;
-import math.wfc.Gridstate;
+package math.wfc;
+import math.wfc.rules.Rule;
 
 /**
  * A Class to store data about a Tile.
@@ -25,14 +25,14 @@ public class Tile {
 
 	/**
 	 * Function to see if all Rules for this tile are fullfilles at a certain position
-	 * @param  grid [description]
-	 * @param  x    [description]
-	 * @param  y    [description]
-	 * @return      [description]
+	 * @param  grid current gridstate
+	 * @param  x    x-coordinate of Superposition
+	 * @param  y    y-coordinate of Superposition
+	 * @return true if the tile can be at this position
 	 */
 	public boolean isPossible(Gridstate grid, int x, int y) {
 		for(Rule r:rules)
-			if(!r.isFullfilled(grid, x, y))
+			if(!r.isFullfilled(grid, x, y, this))
 				return false;
 		return true;
 	}

@@ -24,10 +24,10 @@
   <target name="dist" depends="compile"
         description="generate the distribution">
     <!-- Create the distribution directory -->
-    <mkdir dir="${dist}/lib"/>
+    <mkdir dir="${dist}"/>
 
     <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/Algebra.jar" basedir="${build}"/>
+    <jar jarfile="${dist}/WFC.jar" basedir="${build}"/>
   </target>
 
   <target name="clean"
