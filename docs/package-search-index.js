@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"math.testing"},{"l":"math.wfc"},{"l":"math.wfc.rules"}];updateSearchResults();
