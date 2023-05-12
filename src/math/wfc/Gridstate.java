@@ -42,7 +42,7 @@ public class Gridstate {
 	public Gridstate(Superposition[][] grid, boolean looping, Superposition borderSP){
 		width = grid.length;
 		height = grid[0].length;
-		grid = grid;
+		this.grid = grid;
 		this.looping = looping;
 		this.borderSP = borderSP;
 	}
@@ -62,6 +62,22 @@ public class Gridstate {
 		x -= Math.floorDiv(x, width) * width;
 		y -= Math.floorDiv(y, height) * height;
 		return grid[x][y];
+	}
+
+	/**
+	 * Getter Function for the width of the grid.
+	 * @return Width of the grid
+	 */
+	public int getWidth(){
+		return width;
+	}
+
+	/**
+	 * Getter Function for the height of the grid.
+	 * @return Height of the grid
+	 */
+	public int getHeight(){
+		return height;
 	}
 
 	/**
@@ -114,7 +130,7 @@ public class Gridstate {
 			for(int y = 0; y < height; y++)
 				if(!grid[x][y].isCollapsed())
 					totalPossibilities += grid[x][y].getPossibilityCount();
-	
+
 		//makes sure that every possibility is only tried once
 		int chooseFrom = totalPossibilities;
 		if(triedChoices == null || triedChoices.length != totalPossibilities){
@@ -135,6 +151,7 @@ public class Gridstate {
 			if(!triedChoices[i]){
 				if(chosenPossibility == 0){
 					chosenPossibility = i;
+					triedChoices[i] = true;
 				}
 				chosenPossibility--;
 			}
@@ -146,13 +163,14 @@ public class Gridstate {
 					int posCount = grid[x][y].getPossibilityCount();
 					if(chosenPossibility < posCount){
 						Superposition[][] cloneGrid = cloneGrid();
-						cloneGrid[x][y].collapseTo(chosenPossibility);
+						cloneGrid[x][y].collapseToFromPossible(chosenPossibility);
 						return new Gridstate(cloneGrid, looping, borderSP);
 					}
 					chosenPossibility -= posCount;
 				}
 
 		//should not happen
+		System.out.println("Fuck");
 		return null;
 	}
 
@@ -162,6 +180,28 @@ public class Gridstate {
 	 */
 	public Object clone(){
 		return new Gridstate(cloneGrid(), looping, borderSP);
+	}
+
+	/**
+	 * Converts the Grid to its String representation. If a Superposition has collapsed
+	 * the id of the collapsed tile will be written at that position in the grid,
+	 * otherwise a "~"-Symbol will be there.
+	 * @return String representation
+	 */
+	public String toString(){
+		String total = "";
+		for(int y = 0; y < height; y++){
+			for(int x = 0; x < width; x++){
+				Superposition s = grid[x][y];
+				if(s.isCollapsed()){
+					total += s.getTile().getId() + " ";
+				} else {
+					total += "~ ";
+				}
+			}
+			total += '\n';
+		}
+		return total.substring(0, total.length() - 1);
 	}
 
 	/**

@@ -22,6 +22,12 @@ public class WFC_Handler {
         random = new Random();
     }
 
+    public WFC_Handler(Gridstate g) {
+        currentGrid = g;
+        history = new Stack<Gridstate>();
+        random = new Random();
+    }
+
     /**
      * Runs Wave function collapse algorithm.
      * @return  true if the algorithm terminted successfully otherwise false
@@ -36,7 +42,7 @@ public class WFC_Handler {
                 if(currentGrid.isFinished())
                     return true;
             }
-            //make random choice and push current to history
+            //make random choice and push current to history, if there is no choice left go back up
             Gridstate newState = currentGrid.makeRandomChoice(random);
             while(newState == null){
                 if(history.empty())
@@ -47,5 +53,30 @@ public class WFC_Handler {
             history.push(currentGrid);
             currentGrid = newState;
         }
+    }
+
+    /**
+     * A function to get the finished Grid.
+     * @return Grid of tiles
+     */
+    public Tile[][] getGrid(){
+        if(currentGrid.isFinished()){
+            Tile[][] out = new Tile[currentGrid.getWidth()][currentGrid.getHeight()];
+            for(int x = 0; x < currentGrid.getWidth(); x++) {
+                for(int y = 0; y < currentGrid.getHeight(); y++){
+                    out[x][y] = currentGrid.getPosition(x, y).getTile();
+                }
+            }
+            return out;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Prints the current Grid.
+     */
+    public void printGrid(){
+        System.out.println(currentGrid);
     }
 }

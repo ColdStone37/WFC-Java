@@ -11,10 +11,20 @@ public interface Rule {
 	 * @param  grid the current Gridstate
 	 * @param  x    the x coordinate of the position to test for
 	 * @param  y    the y coordinate of the position to test for
-	 * @param  t    the tile to add at that position
+	 * @param  t    the tile to test for at that position
 	 * @return      whether or not the rule is fullfilled
 	 */
-	public boolean isFullfilled(Gridstate grid, int x, int y, Tile t);
+	public boolean isPossible(Gridstate grid, int x, int y, Tile t);
+
+	/**
+	 * A fuction to test if the rule forces the given Tile
+	 * @param  grid the current Gridstate
+	 * @param  x    the x coordinate of the position to test for
+	 * @param  y    the y coordinate of the position to test for
+	 * @param  t    the tile to test for at that position
+	 * @return      whether or not the rule forced the tile at that position
+	 */
+	public boolean isForced(Gridstate grid, int x, int y, Tile t);
 	/**
 	 * A function that rotates the rule clockwise.
 	 * @return A rotated version of the rule

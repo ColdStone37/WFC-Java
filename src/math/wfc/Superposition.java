@@ -3,7 +3,7 @@ package math.wfc;
 /**
  * A Class storing a single superposition of multiple tiles.
  */
-class Superposition {
+public class Superposition {
 	private final Tile[] tileset;
 	private final boolean[] possibleTiles;
 	private final int x, y;
@@ -55,14 +55,22 @@ class Superposition {
 	 * @return      Whether or not anything was collapsed
 	 */
 	public boolean collapsePossibilities(Gridstate grid) {
+		if(isCollapsed())
+			return false;
 		boolean collapsed = false;
 		for(int i = 0; i < possibleTiles.length; i++)
-			if(possibleTiles[i])
+			if(possibleTiles[i]) {
 				if(!tileset[i].isPossible(grid, x, y)) {
 					possibleTiles[i] = false;
 					collapsed = true;
 					possibilityCount--;
+				} else {
+					if(tileset[i].isForced(grid, x, y)) {
+						collapseTo(i);
+						collapsed = true;
+					}
 				}
+			}
 		return collapsed;
 	}
 
@@ -72,7 +80,7 @@ class Superposition {
 	 * (or less than 0) the Superposition will be empty afterwards.
 	 * @param possibility The index of the State to collapse to
 	 */
-	public void collapseTo(int possibility){
+	public void collapseToFromPossible(int possibility){
 		int countPossibilities = 0;
 		possibilityCount = 0;
 		for(int i = 0; i < possibleTiles.length; i++){
@@ -83,6 +91,22 @@ class Superposition {
 					possibilityCount++;
 				}
 				countPossibilities++;
+			}
+		}
+	}
+
+	/**
+	 * Collapses the Superposition to one possibility.
+	 * @param possibility The index of the State to collapse to
+	 */
+	public void collapseTo(int possibility){
+		possibilityCount = 0;
+		for(int i = 0; i < possibleTiles.length; i++){
+			if(i == possibility){
+				possibleTiles[i] = true;
+				possibilityCount++;
+			} else {
+				possibleTiles[i] = false;
 			}
 		}
 	}
@@ -109,5 +133,31 @@ class Superposition {
 	 */
 	public Object clone(){
 		return new Superposition(x, y, tileset, possibleTiles);
+	}
+
+	/**
+	 * Tests whether a given tile is still possible at this position.
+	 * @param  t The tile to test for
+	 * @return   true if it is still possible
+	 */
+	public boolean tilePossible(Tile t){
+		for(int i = 0; i < possibleTiles.length; i++)
+			if(t == tileset[i])
+				return possibleTiles[i];
+		return false;
+	}
+
+	/**
+	 * Gets the tile a Superposition has collapsed to.
+	 * @return Returns the tile a Superposition has collapsed to or null if it hasn't collapsed
+	 */
+	public Tile getTile(){
+		if(!isCollapsed())
+			return null;
+		for(int i = 0; i < possibleTiles.length; i++){
+			if(possibleTiles[i])
+				return tileset[i];
+		}
+		return null;
 	}
 }
