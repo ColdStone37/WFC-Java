@@ -40,15 +40,23 @@ public abstract class Rule {
 
 	/**
 	 * Enum used to output the State of the Rule.
-	 * FORCED: When this is returned the Tile will instantly be placed at that position
-	 * POSSIBLE: When this is returned the Tile can be at this position. (Should be the default)
-	 * IMPOSSBILE: The Tile can't be at this position anymore. The rule won't be executed at that position again.
-	 * FORBIDDEN: The Grid can't be filled anymore.
 	 */
 	public enum STATE {
+		/**
+		 * When this is returned the Tile will instantly be placed at that position
+		 */
 		FORCED,
+		/**
+		 * When this is returned the Tile can be at this position. (Should be the default)
+		 */
 		POSSIBLE,
+		/**
+		 * The Tile can't be at this position anymore. The rule won't be executed at that position again
+		 */
 		IMPOSSIBLE,
+		/**
+		 * The Grid can't be filled anymore
+		 */
 		FORBIDDEN;
 	}
 }
