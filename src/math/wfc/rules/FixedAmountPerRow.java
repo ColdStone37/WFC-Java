@@ -6,7 +6,7 @@ import math.wfc.Superposition;
 /**
  * A rule that forces a certain amount of a tile to be in each row of a grid.
  */
-public class FixedAmountPerRow implements Rule {
+public class FixedAmountPerRow extends Rule {
 	private final int amount;
 
 	/**
@@ -17,14 +17,15 @@ public class FixedAmountPerRow implements Rule {
 		amount = a;
 	}
 
-	public boolean isPossible(Gridstate grid, int x, int y, Tile t){
+	public STATE getState(Gridstate grid, int x, int y, Tile t){
 		countResult c = countRow(grid, x, y, t);
-		return c.collapsedCount < amount;
-	}
-
-	public boolean isForced(Gridstate grid, int x, int y, Tile t){
-		countResult c = countRow(grid, x, y, t);
-		return c.collapsedCount + c.possibleCount <= amount-1;
+		if(c.collapsedCount > amount || c.collapsedCount + c.possibleCount < amount-1)
+			return STATE.FORBIDDEN;
+		if(c.collapsedCount == amount)
+			return STATE.IMPOSSIBLE;
+		if(c.collapsedCount + c.possibleCount == amount-1)
+			return STATE.FORCED;
+		return STATE.POSSIBLE;
 	}
 
 	/**

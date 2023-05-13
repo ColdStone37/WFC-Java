@@ -6,7 +6,7 @@ import math.wfc.Superposition;
 /**
  * A Rule that forces a certain amount of tiles to be inside each width x height area of the grid.
  */
-public class FixedAmountPerBlock implements Rule {
+public class FixedAmountPerBlock extends Rule {
 	private final int amount;
 	private final int blockWidth, blockHeight;
 
@@ -20,14 +20,15 @@ public class FixedAmountPerBlock implements Rule {
 		blockHeight = h;
 	}
 
-	public boolean isPossible(Gridstate grid, int x, int y, Tile t){
+	public STATE getState(Gridstate grid, int x, int y, Tile t){
 		countResult c = countBlock(grid, x, y, t);
-		return c.collapsedCount < amount;
-	}
-
-	public boolean isForced(Gridstate grid, int x, int y, Tile t){
-		countResult c = countBlock(grid, x, y, t);
-		return c.collapsedCount + c.possibleCount <= amount-1;
+		if(c.collapsedCount > amount || c.collapsedCount + c.possibleCount < amount-1)
+			return STATE.FORBIDDEN;
+		if(c.collapsedCount == amount)
+			return STATE.IMPOSSIBLE;
+		if(c.collapsedCount + c.possibleCount == amount-1)
+			return STATE.FORCED;
+		return STATE.POSSIBLE;
 	}
 
 	/**

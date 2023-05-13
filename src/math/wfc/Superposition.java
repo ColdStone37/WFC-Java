@@ -1,4 +1,5 @@
 package math.wfc;
+import math.wfc.rules.Rule;
 
 /**
  * A Class storing a single superposition of multiple tiles.
@@ -60,15 +61,22 @@ public class Superposition {
 		boolean collapsed = false;
 		for(int i = 0; i < possibleTiles.length; i++)
 			if(possibleTiles[i]) {
-				if(!tileset[i].isPossible(grid, x, y)) {
+				Rule.STATE s = tileset[i].getState(grid, x, y);
+				switch(s){
+				case FORCED:
+					collapseTo(i);
+					collapsed = true;
+					break;
+				case IMPOSSIBLE:
 					possibleTiles[i] = false;
 					collapsed = true;
 					possibilityCount--;
-				} else {
-					if(tileset[i].isForced(grid, x, y)) {
-						collapseTo(i);
-						collapsed = true;
-					}
+					break;
+				case FORBIDDEN:
+					possibilityCount = 0;
+					return true;
+				default:
+					break;
 				}
 			}
 		return collapsed;

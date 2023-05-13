@@ -5,39 +5,50 @@ import math.wfc.Tile;
 /**
  * A Interface for functions on a rule.
  */
-public interface Rule {
+public abstract class Rule {
 	/**
 	 * A function to test if the Rule is fullfilled
 	 * @param  grid the current Gridstate
 	 * @param  x    the x coordinate of the position to test for
 	 * @param  y    the y coordinate of the position to test for
 	 * @param  t    the tile to test for at that position
-	 * @return      whether or not the rule is fullfilled
+	 * @return      The State of this rule (FORCED, POSSIBLE, IMPOSSIBLE or FORBIDDEN)
 	 */
-	public boolean isPossible(Gridstate grid, int x, int y, Tile t);
+	public abstract STATE getState(Gridstate grid, int x, int y, Tile t);
 
-	/**
-	 * A fuction to test if the rule forces the given Tile
-	 * @param  grid the current Gridstate
-	 * @param  x    the x coordinate of the position to test for
-	 * @param  y    the y coordinate of the position to test for
-	 * @param  t    the tile to test for at that position
-	 * @return      whether or not the rule forced the tile at that position
-	 */
-	public boolean isForced(Gridstate grid, int x, int y, Tile t);
 	/**
 	 * A function that rotates the rule clockwise.
 	 * @return A rotated version of the rule
 	 */
-	public Rule rotate();
+	public Rule rotate(){
+		return this;
+	}
 	/**
 	 * A function that mirrors the rule along the x-Axis
 	 * @return A mirrored version of the rule
 	 */
-	public Rule mirrorX();
+	public Rule mirrorX(){
+		return this;
+	}
 	/**
 	 * A function that mirrors the rule along the y-Axis
 	 * @return A mirrores version of the rule
 	 */
-	public Rule mirrorY();
+	public Rule mirrorY(){
+		return this;
+	}
+
+	/**
+	 * Enum used to output the State of the Rule.
+	 * FORCED: When this is returned the Tile will instantly be placed at that position
+	 * POSSIBLE: When this is returned the Tile can be at this position. (Should be the default)
+	 * IMPOSSBILE: The Tile can't be at this position anymore. The rule won't be executed at that position again.
+	 * FORBIDDEN: The Grid can't be filled anymore.
+	 */
+	public enum STATE {
+		FORCED,
+		POSSIBLE,
+		IMPOSSIBLE,
+		FORBIDDEN;
+	}
 }

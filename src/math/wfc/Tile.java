@@ -33,27 +33,22 @@ public class Tile {
 	 * @param  grid current gridstate
 	 * @param  x    x-coordinate of Superposition
 	 * @param  y    y-coordinate of Superposition
-	 * @return true if the tile can be at this position
+	 * @return Rule.STATE object with result of all included rules
 	 */
-	public boolean isPossible(Gridstate grid, int x, int y) {
-		for(Rule r:rules)
-			if(!r.isPossible(grid, x, y, this))
-				return false;
-		return true;
-	}
-
-	/**
-	 * Function to see if the current tile is forced
-	 * @param  grid current gridstate
-	 * @param  x    x-coordinate of Superposition
-	 * @param  y    y-coordinate of Superposition
-	 * @return true if the tile has to be at this position
-	 */
-	public boolean isForced(Gridstate grid, int x, int y) {
-		for(Rule r:rules)
-			if(r.isForced(grid, x, y, this))
-				return true;
-		return false;
+	public Rule.STATE getState(Gridstate grid, int x, int y) {
+		boolean possible = true;
+		for(Rule r:rules){
+			Rule.STATE s = r.getState(grid, x, y, this);
+			if(s == Rule.STATE.FORBIDDEN || s == Rule.STATE.FORCED)
+				return s;
+			if(s == Rule.STATE.IMPOSSIBLE)
+				possible = false;
+		}
+		if(possible){
+			return Rule.STATE.POSSIBLE;
+		} else {
+			return Rule.STATE.IMPOSSIBLE;
+		}
 	}
 
 	/**
